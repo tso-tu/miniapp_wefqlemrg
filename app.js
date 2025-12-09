@@ -79,7 +79,7 @@ window.sendData = async function() { // Добавил async
     tg.showAlert(`Отправка на: ${BACKEND_URL}/web-data`);
     
     try {
-        const response = await fetch(`${BACKEND_URL}/web-data`, {
+        const response = await fetch(`${BACKEND_URL}/webhook`, {
             method: 'POST',
             mode: 'cors',
             headers: {
@@ -156,6 +156,7 @@ tg.MainButton.onClick(closeApp);
 // Логируем событие открытия
 
 console.log('App launched:', tg.initDataUnsafe);
+
 
 
 
