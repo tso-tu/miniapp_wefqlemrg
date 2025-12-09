@@ -76,7 +76,7 @@ window.sendData = async function() { // Добавил async
     };
 
     // Показываем URL для отладки
-    tg.showAlert(`Отправка на: ${BACKEND_URL}/web-data`);
+    tg.showAlert(`Отправка на: ${BACKEND_URL}/webhook`);
     
     try {
         const response = await fetch(`${BACKEND_URL}/webhook`, {
@@ -92,11 +92,6 @@ window.sendData = async function() { // Добавил async
                 timestamp: new Date().toISOString()
             })
         });
-        
-        // Проверяем статус ответа
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
         
         const result = await response.json();
         tg.showAlert(`✅ Успех!\nОтвет сервера: ${result.message || 'Данные получены'}`);
@@ -156,6 +151,7 @@ tg.MainButton.onClick(closeApp);
 // Логируем событие открытия
 
 console.log('App launched:', tg.initDataUnsafe);
+
 
 
 
