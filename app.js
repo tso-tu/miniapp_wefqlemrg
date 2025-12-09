@@ -136,7 +136,15 @@ window.sendData = async function() { // Добавил async
     }
 }
 
-
+async function testBackend() {
+        try {
+            const response = await fetch(`${BACKEND_URL}/api/test`);
+            const data = await response.json();
+            alert(JSON.stringify(data, null, 2));
+        } catch (error) {
+            alert('Ошибка: ' + error.message);
+        }
+    }
 
 // Закрытие приложения
 function closeApp() {
@@ -151,6 +159,7 @@ tg.MainButton.onClick(closeApp);
 // Логируем событие открытия
 
 console.log('App launched:', tg.initDataUnsafe);
+
 
 
 
