@@ -1,5 +1,6 @@
 // app.js - полный исправленный код
 
+const BACKEND_URL = 'https://backflaskasdfsfg.vercel.app/api'; 
 // Ждем полной загрузки страницы и Telegram SDK
 document.addEventListener('DOMContentLoaded', function() {
     initTelegramApp();
@@ -50,7 +51,7 @@ function initTelegramApp() {
         };
         
         // Функция для отправки данных
-        const BACKEND_URL = 'https://backflaskasdfsfg.vercel.app/api'; 
+       
 
 window.sendData = async function() { // Добавил async
     // Проверяем доступность Telegram WebApp
@@ -138,7 +139,7 @@ window.sendData = async function() { // Добавил async
 
 async function testBackend() {
         try {
-            const response = await fetch(`${BACKEND_URL}/api/test`);
+            const response = await fetch(`${BACKEND_URL}/test`);
             const data = await response.json();
             alert(JSON.stringify(data, null, 2));
         } catch (error) {
@@ -159,6 +160,7 @@ tg.MainButton.onClick(closeApp);
 // Логируем событие открытия
 
 console.log('App launched:', tg.initDataUnsafe);
+
 
 
 
