@@ -52,7 +52,7 @@ function initTelegramApp() {
         // Функция для отправки данных
         const BACKEND_URL = 'https://backflaskasdfsfg.vercel.app:3000';
 
-         window.sendData = function() {
+         /*window.sendData = function() {
             const data = {
                 action: 'button_click',
                 user_id: user.id,
@@ -79,7 +79,7 @@ function initTelegramApp() {
                 console.error('Error:', error);
                 tg.showAlert('Ошибка отправки');
             }
-        }
+        }*/
         
     } else {
         // Режим для тестирования в браузере
@@ -130,6 +130,7 @@ tg.MainButton.onClick(closeApp);
 // Логируем событие открытия
 
 console.log('App launched:', tg.initDataUnsafe);
+
 
 
 
