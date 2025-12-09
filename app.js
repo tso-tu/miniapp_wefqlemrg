@@ -50,7 +50,7 @@ function initTelegramApp() {
         };
         
         // Функция для отправки данных
-        const BACKEND_URL = 'http://localhost:3000';
+        const BACKEND_URL = 'https://backflaskasdfsfg.vercel.app';
 
         async function sendData() {
             const data = {
@@ -133,6 +133,7 @@ tg.MainButton.onClick(closeApp);
 // Логируем событие открытия
 
 console.log('App launched:', tg.initDataUnsafe);
+
 
 
 
