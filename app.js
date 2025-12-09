@@ -1,55 +1,124 @@
-// Инициализация Telegram Web App
-const tg = window.Telegram?.WebApp || {};
+// app.js - полный исправленный код
 
-// Инициализация при загрузке
-tg.ready && tg.ready();
-tg.expand && tg.expand();
+// Ждем полной загрузки страницы и Telegram SDK
+document.addEventListener('DOMContentLoaded', function() {
+    initTelegramApp();
+});
 
-// Получаем данные пользователя
-const user = tg.initDataUnsafe.user;
+function initTelegramApp() {
+    // Проверяем, что Telegram Web App SDK загружен
+    if (window.Telegram && window.Telegram.WebApp) {
+        const tg = window.Telegram.WebApp;
+        
+        // Инициализируем Web App
+        tg.ready(); // Важно! Сообщаем Telegram, что приложение готово
+        tg.expand(); // Расширяем на весь экран
+        
+        // Получаем данные пользователя
+        const user = tg.initDataUnsafe?.user;
+        
+        // Отображаем информацию о пользователе
+        const userDataElement = document.getElementById('user-data');
+        if (userDataElement && user) {
+            userDataElement.innerHTML = `
+                <p>👤 <b>${user.first_name || 'Аноним'}</b></p>
+                ${user.username ? `<p>@${user.username}</p>` : ''}
+                <p>ID: ${user.id}</p>
+                <p>Language: ${user.language_code || 'не указан'}</p>
+            `;
+        } else if (userDataElement) {
+            userDataElement.innerHTML = '<p>Данные пользователя недоступны</p>';
+        }
+        
+        // Показываем главную кнопку
+        if (tg.MainButton) {
+            tg.MainButton.setText("Закрыть");
+            tg.MainButton.show();
+            tg.MainButton.onClick(() => {
+                tg.close();
+            });
+        }
+        
+        // Делаем функцию showAlert глобально доступной
+        window.showAlert = function() {
+            if (tg && tg.showAlert) {
+                tg.showAlert('Привет от Mini App! 🎉');
+            } else {
+                // Фолбэк для отладки вне Telegram
+                alert('Привет от Mini App! (тестовый режим)');
+            }
+        };
+        
+        // Функция для отправки данных
+        const BACKEND_URL = 'http://localhost:3000';
 
-// Отображаем информацию о пользователе
-document.getElementById('user-data').innerHTML = `
-    <p>👤 <b>${user.first_name || 'Аноним'}</b></p>
-    ${user.username ? `<p>@${user.username}</p>` : ''}
-    <p>ID: ${user.id}</p>
-`;
-
-// Функция для показа alert
-function showAlert() {
-    tg.showAlert('Привет от Mini App!');
-}
-
-// Функция для отправки данных
-const BACKEND_URL = 'http://localhost:3000';
-
-async function sendData() {
-    const data = {
-        action: 'button_click',
-        user_id: user.id,
-        timestamp: Date.now()
-    };
+        async function sendData() {
+            const data = {
+                action: 'button_click',
+                user_id: user.id,
+                timestamp: Date.now()
+            };
     
-    try {
-        const response = await fetch(`${BACKEND_URL}/web-data`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
+        try {
+            const response = await fetch(`${BACKEND_URL}/web-data`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
                 initData: window.Telegram.WebApp.initData, // Важно!
                 data: data,
                 user: user
-            })
-        });
+                    })
+                });
         
-        const result = await response.json();
-        tg.showAlert(`Ответ сервера: ${result.message}`);
-    } catch (error) {
-        console.error('Error:', error);
-        tg.showAlert('Ошибка отправки');
+            const result = await response.json();
+            tg.showAlert(`Ответ сервера: ${result.message}`);
+        } catch (error) {
+                console.error('Error:', error);
+                tg.showAlert('Ошибка отправки');
+            }
+        }
+        
+        // Логи для отладки
+        console.log('Telegram Web App инициализирован');
+        console.log('User data:', user);
+        
+    } else {
+        // Режим для тестирования в браузере
+        console.warn('Telegram Web App SDK не найден. Режим тестирования.');
+        
+        // Эмулируем данные пользователя для теста
+        const mockUser = {
+            first_name: 'Тестовый',
+            username: 'test_user',
+            id: 123456789,
+            language_code: 'ru'
+        };
+        
+        // Отображаем мок-данные
+        const userDataElement = document.getElementById('user-data');
+        if (userDataElement) {
+            userDataElement.innerHTML = `
+                <p>👤 <b>${mockUser.first_name} (тестовый режим)</b></p>
+                <p>@${mockUser.username}</p>
+                <p>ID: ${mockUser.id}</p>
+                <p style="color: orange;">⚠️ Запустите в Telegram для полного функционала</p>
+            `;
+        }
+        
+        // Фолбэк функции для тестирования
+        window.showAlert = function() {
+            alert('Привет от Mini App! (тестовый режим - запустите в Telegram)');
+        };
+        
+        window.sendData = function() {
+            alert('Данные отправлены (тестовый режим)');
+        };
     }
 }
+
+
 
 // Закрытие приложения
 function closeApp() {
@@ -64,5 +133,6 @@ tg.MainButton.onClick(closeApp);
 // Логируем событие открытия
 
 console.log('App launched:', tg.initDataUnsafe);
+
 
 
