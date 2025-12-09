@@ -1,8 +1,9 @@
 // Инициализация Telegram Web App
-const tg = window.Telegram.WebApp;
+const tg = window.Telegram?.WebApp || {};
 
-// Расширяем приложение на весь экран
-tg.expand();
+// Инициализация при загрузке
+tg.ready && tg.ready();
+tg.expand && tg.expand();
 
 // Получаем данные пользователя
 const user = tg.initDataUnsafe.user;
@@ -63,4 +64,5 @@ tg.MainButton.onClick(closeApp);
 // Логируем событие открытия
 
 console.log('App launched:', tg.initDataUnsafe);
+
 
