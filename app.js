@@ -52,38 +52,34 @@ function initTelegramApp() {
         // Функция для отправки данных
         const BACKEND_URL = 'https://backflaskasdfsfg.vercel.app:3000';
 
-        async function sendData() {
+         window.sendData = function() {
             const data = {
                 action: 'button_click',
                 user_id: user.id,
                 timestamp: Date.now()
             };
 
-            tg.showAlert('Ответ');
-        try {
-            const response = await fetch(`${BACKEND_URL}/web-data`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                initData: window.Telegram.WebApp.initData, // Важно!
-                data: data,
-                user: user
-                    })
-                });
+            tg.showAlert(BACKEND_URL);
+            try {
+                const response = await fetch(`${BACKEND_URL}/web-data`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                    initData: window.Telegram.WebApp.initData, // Важно!
+                    data: data,
+                    user: user
+                        })
+                    });
         
-            const result = await response.json();
-            tg.showAlert(`Ответ сервера: ${result.message}`);
-        } catch (error) {
+                const result = await response.json();
+                tg.showAlert(`Ответ сервера: ${result.message}`);
+            } catch (error) {
                 console.error('Error:', error);
                 tg.showAlert('Ошибка отправки');
             }
         }
-        
-        // Логи для отладки
-        console.log('Telegram Web App инициализирован');
-        console.log('User data:', user);
         
     } else {
         // Режим для тестирования в браузере
@@ -134,6 +130,7 @@ tg.MainButton.onClick(closeApp);
 // Логируем событие открытия
 
 console.log('App launched:', tg.initDataUnsafe);
+
 
 
 
