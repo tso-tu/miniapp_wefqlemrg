@@ -81,6 +81,7 @@ window.sendData = async function() { // Добавил async
     try {
         const response = await fetch(`${BACKEND_URL}/web-data`, {
             method: 'POST',
+            mode: 'cors',
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -155,6 +156,7 @@ tg.MainButton.onClick(closeApp);
 // Логируем событие открытия
 
 console.log('App launched:', tg.initDataUnsafe);
+
 
 
 
