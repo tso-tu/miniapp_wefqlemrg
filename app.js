@@ -50,7 +50,7 @@ function initTelegramApp() {
         };
         
         // Функция для отправки данных
-        const BACKEND_URL = 'https://backflaskasdfsfg.vercel.app'; // Убрал :3000
+        const BACKEND_URL = 'https://backflaskasdfsfg.vercel.app/api'; 
 
 window.sendData = async function() { // Добавил async
     // Проверяем доступность Telegram WebApp
@@ -156,6 +156,7 @@ tg.MainButton.onClick(closeApp);
 // Логируем событие открытия
 
 console.log('App launched:', tg.initDataUnsafe);
+
 
 
 
