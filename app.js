@@ -50,36 +50,61 @@ function initTelegramApp() {
         };
         
         // Функция для отправки данных
-        const BACKEND_URL = 'https://backflaskasdfsfg.vercel.app:3000';
+        const BACKEND_URL = 'https://backflaskasdfsfg.vercel.app'; // Убрал :3000
 
-         /*window.sendData = function() {
-            const data = {
-                action: 'button_click',
-                user_id: user.id,
-                timestamp: Date.now()
-            };
+window.sendData = async function() { // Добавил async
+    // Проверяем доступность Telegram WebApp
+    if (!window.Telegram?.WebApp) {
+        alert('Запустите в Telegram WebView');
+        return;
+    }
+    
+    const tg = window.Telegram.WebApp;
+    const user = tg.initDataUnsafe?.user;
+    
+    // Проверяем наличие пользователя
+    if (!user?.id) {
+        tg.showAlert('Данные пользователя недоступны');
+        return;
+    }
+    
+    const data = {
+        action: 'button_click',
+        user_id: user.id,
+        user_name: user.first_name || 'Аноним',
+        timestamp: Date.now()
+    };
 
-            tg.showAlert(BACKEND_URL);
-            try {
-                const response = await fetch(`${BACKEND_URL}/web-data`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                    initData: window.Telegram.WebApp.initData, // Важно!
-                    data: data,
-                    user: user
-                        })
-                    });
+    // Показываем URL для отладки
+    tg.showAlert(`Отправка на: ${BACKEND_URL}/web-data`);
+    
+    try {
+        const response = await fetch(`${BACKEND_URL}/web-data`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                initData: tg.initData, // Используем tg вместо window.Telegram.WebApp
+                data: data,
+                user: user,
+                timestamp: new Date().toISOString()
+            })
+        });
         
-                const result = await response.json();
-                tg.showAlert(`Ответ сервера: ${result.message}`);
-            } catch (error) {
-                console.error('Error:', error);
-                tg.showAlert('Ошибка отправки');
-            }
-        }*/
+        // Проверяем статус ответа
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const result = await response.json();
+        tg.showAlert(`✅ Успех!\nОтвет сервера: ${result.message || 'Данные получены'}`);
+        
+    } catch (error) {
+        console.error('Error:', error);
+        tg.showAlert(`❌ Ошибка отправки:\n${error.message}\n\nПроверьте:\n1. URL сервера\n2. CORS настройки`);
+    }
+}
         
     } else {
         // Режим для тестирования в браузере
@@ -130,6 +155,7 @@ tg.MainButton.onClick(closeApp);
 // Логируем событие открытия
 
 console.log('App launched:', tg.initDataUnsafe);
+
 
 
 
